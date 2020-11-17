@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/dhairya/Documents/Complex Plotter/src/interpretFunction.cpp
+interpretFunction.h
+/home/dhairya/Documents/Complex Plotter/src/interpretFunction.h
+
+include/interpretFunction.h
+complex
+-
+string.h
+-
+vector
+-
+queue
+-
+stack
+-
+sstream
+-
+algorithm
+-
+
