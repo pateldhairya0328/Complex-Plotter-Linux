@@ -188,6 +188,12 @@ The location of where the branch cuts need to be made can be seen here, along th
 
 <a href="https://imgur.com/V3XaqDo"><img src="https://i.imgur.com/V3XaqDo.jpg" title="source: imgur.com" /></a>
 
+* ![Equation](https://latex.codecogs.com/gif.latex?\sqrt{z})
+
+The branch cuts can also be easily rotated, to get another branch cut. In this example, we see the branch cut of square root two rotated by π/6. This was done by inputing `\exp(i*pi/6)*(z*\exp(-i*pi/3))^0.5` instead of simply `z^0.5`, which would have given us the default branch cut on the negative real axis.
+
+<a href="https://imgur.com/V3XaqDo"><img src="https://i.imgur.com/jfk1M9s.png" title="source: imgur.com" /></a>
+
 * ![Equation](https://latex.codecogs.com/gif.latex?z&plus;\frac{1}{z})
 over [-4, 4]×[-4, 4]
 
