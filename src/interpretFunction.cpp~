@@ -1,7 +1,7 @@
 #include "interpretFunction.h"
 
 std::vector<Token> expr;
-std::vector<std::complex<double>> temp;
+std::vector<std::complex<double>> evalStack;
 double step = 0;
 
 void setStep(double argstep) {
@@ -11,19 +11,12 @@ void setStep(double argstep) {
 void initFunc(std::string infix) {
 	std::vector<std::string> infixVec;
 	std::stack<int> opStack;
-
+	
 	std::replace(infix.begin(), infix.end(), '(', '{');
 	std::replace(infix.begin(), infix.end(), ')', '}');
-
-	//Isolate each operator, function and number as an individual token string
+	
+	//Isolate each operator, function, number and variable as an individual token string
 	for (int i = 0; i < infix.size(); i++) {
-	    if (infix[i] == '('){
-	        infix[i] = '{';
-	    }
-	    else if (infix[i] == ')'){
-	        infix[i] = '}';
-	    }
-	    
 		if (infix[i] == '\\') {
 			int j = getOp(infix, i);
 			std::string tempStr = infix.substr(i + 1, j - i - 1);
@@ -32,11 +25,11 @@ void initFunc(std::string infix) {
 		}
 		else if (i > 0 && infix[i] == '-' && infix[i-1] == '{') {
 			infixVec.push_back("0");
-			infixVec.push_back(infix.substr(i, 1));
+			infixVec.push_back("-");
 		}
 		else if (i == 0 && infix[i] == '-') {
 			infixVec.push_back("0");
-			infixVec.push_back(infix.substr(i, 1));
+			infixVec.push_back("-");
 		}
 		else if (infix.substr(i, 2) == "pi") {
 			infixVec.push_back("pi");
@@ -45,8 +38,8 @@ void initFunc(std::string infix) {
 		else if (std::isdigit(infix[i]) || infix[i] == '.') {
 			int j = i;
 			std::string tempStr = "";
-			while (j < infix.size() & (std::isdigit(infix[j]) || infix[j] == '.')) {
-			    tempStr += infix[j];
+			while (j < infix.size() && (std::isdigit(infix[j]) || infix[j] == '.')) {
+				tempStr += infix[j];
 				j++;
 			}
 			if (j < infix.size() && infix[j] == 'i') {
@@ -62,8 +55,8 @@ void initFunc(std::string infix) {
 			int j = i + 1;
 			std::string tempStr = "(";
 			while (infix[j] != ']'){
-			    tempStr += infix[j];
-			    j++;
+				tempStr += infix[j];
+				j++;
 			}
 			infixVec.push_back(tempStr+")");
 			i = j;
@@ -132,15 +125,61 @@ void initFunc(std::string infix) {
 		expr.push_back({ opStack.top() <= 4 ? 3 : 2, 0.0, opStack.top() });
 		opStack.pop();
 	}
-
+	
+	//pre-evaluates all constant sub-expressions in the postfox expression
+	//this means that time is saved not re-evaluating constant expressions thousands if not millions of times
+	//it also allows users to input constant expressions into the program without any risk of slower processing
+	//constant expressions are often easier to write than the long decimal numerical form (ex. \cos(2) is much 
+	//easier to input than −0.416146836547.
+	bool changed = true;
+	while(changed){
+		changed = false;
+		std::vector<Token>::iterator it = expr.begin()+1;
+		for (; it != expr.end(); it++) {
+			if(it->type == 2 && (it - 1)->type == 0){
+				(it - 1)->num = evalFunc(it->op, (it - 1)->num);
+				std::rotate(it, std::next(it), expr.end());
+				expr.pop_back();
+				changed = true;
+			}
+			else if(it->type == 3 && (it - 1)->type == 0 && (it - 2)->type == 0){
+				switch (it->op) {
+				case 0:
+					(it - 2)->num = (it - 2)->num + (it - 1)->num;
+					break;
+				case 1:
+					(it - 2)->num = (it - 2)->num - (it - 1)->num;
+					break;
+				case 2:
+					(it - 2)->num = (it - 2)->num * (it - 1)->num;
+					break;
+				case 3:
+					(it - 2)->num = (it - 2)->num / (it - 1)->num;
+					break;
+				case 4:
+					(it - 2)->num = std::pow((it - 2)->num , (it - 1)->num);
+					break;
+				default:
+					(it - 2)->num = 0;
+					break;
+				}
+				
+				std::rotate(std::prev(it), std::next(it), expr.end());
+				expr.pop_back();
+				expr.pop_back();
+				changed = true;
+			}
+		}
+	}
+	
 	//initializes vector to necessary size that will be used as a stack for function evaluations
-	temp.insert(temp.begin(), expr.size(), 0);
+	evalStack.insert(evalStack.begin(), expr.size(), 0);
 }
 
 //gets operation/function/number indices that can be used to isolate token 
 int getOp(std::string& infix, int n) {
 	for (int i = n + 1; i < infix.size(); i++) {
-		if (infix[i] == '\\' || infix[i] == '-' || infix[i] == '+' || infix[i] == '*' || infix[i] == '/' || infix[i] == '^' || infix[i] == '[' || infix[i] == ']') {
+		if (infix[i] == '\\' || infix[i] == '-' || infix[i] == '+' || infix[i] == '*' || infix[i] == '/' || infix[i] == '^' || infix[i] == '{' || infix[i] == '}') {
 			if (i != n + 1) {
 				return i;
 			}
@@ -322,49 +361,49 @@ std::complex<double> evalFunc(int opCode, std::complex<double> z) {
 }
 
 //evaluates the overall expression using a stack
-//this is the bottleneck on the program speed
+//this is often the bottleneck on the program speed
 std::complex<double> f(std::complex<double> z) {
 	int stackCounter = 0;
 	std::complex<double> temp1, temp2;
 
 	for (std::vector<Token>::iterator it = expr.begin(); it != expr.end(); it++) {
 		if (it->type == 0) {
-			temp[stackCounter++] = it->num;
+			evalStack[stackCounter++] = it->num;
 		}
 		else if (it->type == 1) {
-			temp[stackCounter++] = z;
+			evalStack[stackCounter++] = z;
 		}
 		else if (it->type == 2) {
-			temp1 = temp[--stackCounter];
-			temp[stackCounter++] = evalFunc(it->op, temp1);
+			temp1 = evalStack[--stackCounter];
+			evalStack[stackCounter++] = evalFunc(it->op, temp1);
 		}
 		else if (it->type == 3) {
-			temp1 = temp[--stackCounter];
-			temp2 = temp[--stackCounter];
+			temp1 = evalStack[--stackCounter];
+			temp2 = evalStack[--stackCounter];
 
 			switch (it->op) {
 			case 0:
-				temp[stackCounter++] = temp2 + temp1;
+				evalStack[stackCounter++] = temp2 + temp1;
 				break;
 			case 1:
-				temp[stackCounter++] = temp2 - temp1;
+				evalStack[stackCounter++] = temp2 - temp1;
 				break;
 			case 2:
-				temp[stackCounter++] = temp2 * temp1;
+				evalStack[stackCounter++] = temp2 * temp1;
 				break;
 			case 3:
-				temp[stackCounter++] = temp2 / temp1;
+				evalStack[stackCounter++] = temp2 / temp1;
 				break;
 			case 4:
-				temp[stackCounter++] = std::pow(temp2, temp1);
+				evalStack[stackCounter++] = std::pow(temp2, temp1);
 				break;
 			default:
-				temp[stackCounter++] = 0;
+				evalStack[stackCounter++] = 0;
 				break;
 			}
 		}
 	}
-	return temp[--stackCounter];
+	return evalStack[--stackCounter];
 }
 
 //uses Lanczos approximation
@@ -385,35 +424,6 @@ std::complex<double> gamma(std::complex<double> z) {
 
 	return y;
 }
-
-/*
-//using formula 21 on https://mathworld.wolfram.com/RiemannZetaFunction.html
-std::complex<double> zeta(std::complex<double> z) {
-	if (z.real() < 0.5) {
-		return 2.0 * std::pow(2.0 * PI, z - 1.0) * std::sin(0.5 * PI * z) * gamma(1.0 - z) * zeta(1.0 - z);
-	}
-	else {
-		std::complex<double> tot = 0, partialTot1 = 0.0, partialTot2 = 0.0;
-		double k1, n = 20;
-		double negOneFactor = (int)n % 2 == 0 ? -1 : 1;
-		double negOneFactor2 = 1;
-		double ek = 1;
-		int binCoeff = 1;
-
-		for (double k = n; k > 0; k--) {
-			k1 = k + n;
-			partialTot1 += negOneFactor * std::pow(k, -z);
-			partialTot2 += negOneFactor2 * ek * std::pow(k1, -z);
-			negOneFactor *= -1;
-			negOneFactor2 *= -2;
-			binCoeff = binCoeff * k / (n - k + 1);
-			ek += binCoeff;
-		}
-
-		return (partialTot1 + std::pow(2, -n) * partialTot2) / (1.0 - std::pow(2.0, 1.0 - z));
-	}
-}
-*/
 
 //using formula 21 on https://mathworld.wolfram.com/RiemannZetaFunction.html
 std::complex<double> zeta(std::complex<double> z) {
@@ -449,7 +459,7 @@ std::complex<double> zeta(std::complex<double> z) {
 				div *= 0.5;
 				n++;
 			}
-
+	
 			return tot / (1.0 - std::pow(2.0, 1.0 - z));
 		}
 	}

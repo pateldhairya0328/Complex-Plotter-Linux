@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 	plot_func(realNum, imagNum, realMin, imagMin, xstep, ystep, equiAngleLines, lineType, axis, colorScheme, plot);
 
 	//Writing out time it took to complete the plot in milliseconds
-	std::cout << "Time taken: " << 0.001*(float)(clock() - t) << " s" << std::endl;
+	std::cout << "Time taken: " << 0.000001*(float)(clock() - t) << " s" << std::endl;
 	std::cout << "Saving...";
 	cv::imwrite(name+".png", plot);
 	std::cout << "\rPlot saved as " << name << ".png" << std::endl;
