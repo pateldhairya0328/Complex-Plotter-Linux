@@ -11,16 +11,11 @@ void setStep(double argstep) {
 void initFunc(std::string infix) {
 	std::vector<std::string> infixVec;
 	std::stack<int> opStack;
-<<<<<<< HEAD
 	
 	std::replace(infix.begin(), infix.end(), '(', '{');
 	std::replace(infix.begin(), infix.end(), ')', '}');
 	
 	//Isolate each operator, function, number and variable as an individual token string
-	for (int i = 0; i < infix.size(); i++) {
-=======
-
-	//Isolate each operator, function and number as an individual token string
 	for (int i = 0; i < infix.size(); i++) {
 		if (infix[i] == '('){
 			infix[i] = '{';
@@ -29,7 +24,6 @@ void initFunc(std::string infix) {
 			infix[i] = '}';
 		}
 	    
->>>>>>> 143c7c45e707cb67173091374fab8be96c0284c1
 		if (infix[i] == '\\') {
 			int j = getOp(infix, i);
 			std::string tempStr = infix.substr(i + 1, j - i - 1);
@@ -52,11 +46,7 @@ void initFunc(std::string infix) {
 			int j = i;
 			std::string tempStr = "";
 			while (j < infix.size() && (std::isdigit(infix[j]) || infix[j] == '.')) {
-<<<<<<< HEAD
-				tempStr += infix[j];
-=======
 			    tempStr += infix[j];
->>>>>>> 143c7c45e707cb67173091374fab8be96c0284c1
 				j++;
 			}
 			if (j < infix.size() && infix[j] == 'i') {
