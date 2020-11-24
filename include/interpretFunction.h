@@ -5,6 +5,7 @@
 #include <stack>
 #include <sstream>
 #include <algorithm>
+#include <iostream>
 
 const double PI = 3.14159265358979323846;
 const double E = 2.71828182845904523536;
@@ -16,7 +17,7 @@ const int pSize = 9;
 
 enum otherTokens { LBRACKET = -3, RBRACKET = -2, OTHER = -1};
 enum operation { ADD, SUB, MUL, DIV, POW, RE, IM, ABS, ARG, CONJ, EXP, LOG, COS, SIN, TAN, SEC, CSC, COT, ACOS, ASIN, ATAN, COSH, SINH, TANH, ACOSH, ASINH, ATANH, STEP, DELTA, GAMMA, ZETA };
-enum tokenType { IMMEDIATE = 0, VARIABLE = 1, FUNCTION = 2, BIN_OPERATOR = 3 };
+enum tokenType { FUNCTION = -3, BIN_OPERATOR = -2, IMMEDIATE = -1, VARIABLE = 0 };
 
 //struct used for creating postfix expression, since the expression
 //needs to handle operators, functions and numbers. I could just use

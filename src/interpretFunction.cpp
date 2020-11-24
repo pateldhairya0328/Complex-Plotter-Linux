@@ -108,8 +108,8 @@ void initFunc(std::string infix) {
 		else if (code >= 0 && code <= 4) {
 			while (!opStack.empty() &&
 				((opStack.top() >= code)
-					|| ((code == 0 || code == 1) && (opStack.top() == 0))
-					|| ((code == 2 || code == 3) && (opStack.top() == 2)))) {
+					|| ((code == ADD || code == SUB) && (opStack.top() == 0))
+					|| ((code == MUL || code == DIV) && (opStack.top() == 2)))) {
 				expr.push_back({ opStack.top() <= 4 ? BIN_OPERATOR : FUNCTION, 0.0, opStack.top() });
 				opStack.pop();
 			}
@@ -149,6 +149,7 @@ void initFunc(std::string infix) {
 			if(expr[i].type == FUNCTION && expr[i - 1].type == IMMEDIATE){
 				expr[i - 1].num = evalFunc(it->op, expr[i - 1].num);
 				
+				//need to shift expression left by 1, to fill empty slot left by evaluating function
 				if (i != expr.size() - 1){
 				    std::rotate(it + 1, it + 2, expr.end());
 				}
@@ -177,6 +178,7 @@ void initFunc(std::string infix) {
 				        break;
 			    }
 				
+				//need to shift expression left by 2, to fill empty slot by evaluating binary operator
 				if (i != expr.size() - 1){
 				    std::rotate(it, it + 2, expr.end());
 				}
