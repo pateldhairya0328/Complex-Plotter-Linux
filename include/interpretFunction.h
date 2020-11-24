@@ -5,7 +5,6 @@
 #include <stack>
 #include <sstream>
 #include <algorithm>
-#include <iostream>
 
 const double PI = 3.14159265358979323846;
 const double E = 2.71828182845904523536;
@@ -14,6 +13,10 @@ const std::complex<double> I = std::complex<double>(0, 1.0);
 //needed for gamma function by lanczos approx
 const double p[9] = { 0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7 };
 const int pSize = 9;
+
+enum otherTokens { LBRACKET = -3, RBRACKET = -2, OTHER = -1};
+enum operation { ADD, SUB, MUL, DIV, POW, RE, IM, ABS, ARG, CONJ, EXP, LOG, COS, SIN, TAN, SEC, CSC, COT, ACOS, ASIN, ATAN, COSH, SINH, TANH, ACOSH, ASINH, ATANH, STEP, DELTA, GAMMA, ZETA };
+enum tokenType { IMMEDIATE = 0, VARIABLE = 1, FUNCTION = 2, BIN_OPERATOR = 3 };
 
 //struct used for creating postfix expression, since the expression
 //needs to handle operators, functions and numbers. I could just use

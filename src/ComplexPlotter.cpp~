@@ -157,7 +157,6 @@ int main(int argc, char *argv[])
 		ystep = step;
 	}
     
-    //convert function to all lower case
     std::transform(func.begin(), func.end(), func.begin(), [](unsigned char const &c){return std::tolower(c);});    
     
 	const int realNum = std::round(((realMax - realMin) / xstep));

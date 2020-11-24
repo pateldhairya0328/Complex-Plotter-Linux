@@ -138,6 +138,7 @@ void initFunc(std::string infix) {
 	//it also allows users to input constant expressions into the program without risk of slower processing.
 	//constant expressions are often easier to write than the long decimal numerical form (ex. \cos(2) is much 
 	//easier to input than −0.416146836547.
+	
 	bool changed = true;
 	while(changed){
 		changed = false;
@@ -186,6 +187,10 @@ void initFunc(std::string infix) {
 			}
             it++;
 		}
+	}
+	
+	for (auto i : expr){
+	    std::cout << i.type << ", ";
 	}
 	
 	//initializes vector to necessary size that will be used as a stack for function evaluations
