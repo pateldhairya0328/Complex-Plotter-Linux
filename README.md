@@ -1,7 +1,7 @@
 # Complex-Plotter-Linux
 The same complex plotter as my other repo, but for Linux
 
-This is a repository for visualizing complex valued functions using domain coloring in C++ using OpenCV. The method of domain coloring 
+This is a repository for visualizing complex valued functions using domain coloring in C++ using OpenCV. Also uses the C++ wrapper for the FORTRAN subroutines to evaluate Bessel functions found at https://github.com/joeydumont/complex_bessel. The method of domain coloring 
 used here gives information about four main properties of a complex number - magnitude, phase, as well as real and imaginary components -
 as well as the singularities and zeros. I will present some examples of how to interpret the different pieces of  information from the domain colored
 plot using the rational function:
