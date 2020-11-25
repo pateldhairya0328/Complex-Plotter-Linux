@@ -314,28 +314,30 @@ int plot_func(int realNum, int imagNum, double realMin, double imagMin, double x
 	}
 
 	if (axis) {
+		int width = std::round(std::max(realNum, imagNum)/1000.0);
+		
 		double axisStep = xstep * realNum / 10.0;
 		double scale = std::pow(10.0, std::ceil(std::log10(std::abs(axisStep))) + 1);
-		axisStep = std::round(axisStep*2*scale) / (2*scale * xstep);
+		axisStep = std::round(axisStep * 2 * scale) / (2 * scale * xstep);
 		double x = std::round(realMin * 2 * scale) / (2 * scale);
 		if (x == realMin) {
 			x += axisStep * xstep;
 		}
 
 		for (x = (x - realMin) / xstep; x < realNum; x += axisStep) {
-			cv::line(plot, cv::Point(0, x), cv::Point(imagNum - 1, x), cv::Scalar(50, 50, 50), std::round(realNum/1000.0));
+			cv::line(plot, cv::Point(x, 0), cv::Point(x, imagNum - 1), cv::Scalar(50, 50, 50), width);
 		}
 		
 		axisStep = ystep * imagNum / 10.0;
 		scale = std::pow(10.0, std::ceil(std::log10(std::abs(axisStep))) + 1);
 		axisStep = std::round(axisStep * 2 * scale) / (2 * scale * ystep);
-		x = std::round(imagMin * 2 * scale) / (2 * scale * ystep);
-		if (x == realMin) {
+		x = std::round(imagMin * 2 * scale) / (2 * scale);
+		if (x == imagMin) {
 			x += axisStep * ystep;
 		}
 
 		for (x = (x - imagMin) / ystep; x < imagNum; x += axisStep) {
-			cv::line(plot, cv::Point(x, 0), cv::Point(x, realNum - 1), cv::Scalar(50, 50, 50), std::round(imagNum / 1000.0));
+			cv::line(plot, cv::Point(0, x), cv::Point(realNum - 1, x), cv::Scalar(50, 50, 50), width);
 		}
 	}
 
@@ -401,19 +403,3 @@ int hsvToRGB(int n, double H, double S, double V) {
 	double k = fmod(n + H, 6);
 	return (int)(255.0 * (V - V * S * std::max(std::min(std::min(k, 4 - k), 1.0), 0.0)));
 }
-
-//Test Cases
-//1. return ((z + 3.0 + 5.0*I)*(z - 7.0*I)*(z - 7.0*I))*((1.0 / z) + (1.0*I / ((z - 5.0 - 3.0*I)*(z - 5.0 - 3.0*I)*(z - 5.0 - 3.0*I))));
-//2. return ((z+1.0)*(z+ std::complex<double>(0, 1.0)))/((z-1.0)*(z-std::complex<double>(0,1.0)));
-//3. return std::exp(1.0 / z);
-//4. return (z*z + 1.0) / (z*z - 1.0);
-//5. return ((z*z - 1.0)*(z - 2.0 - I)*(z - 2.0 - I)) / (z*z + 2.0 + 2.0*I);
-//6. return (std::pow(z, 10) - 1.0) / (std::pow(z, 10) - 0.34867844);
-//7. return z*z+2.0*std::conj(z)+1.0;
-//8. return gamma(z);
-//9. return 1.0/gamma(z);
-//10. return std::asin(z);
-//11. return z + 1.0 / z;
-//12. return std::log(z);
-//13. return (1.0 + z)*(1.0 + 0.445*z + z * z)*(1.0 + 1.247*z + z * z)*(1.0 + 1.8019 * z + z * z);
-//14. return std::sin(z*z*z-1.0)/z;

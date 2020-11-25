@@ -123,6 +123,7 @@ complex_plotter: /usr/local/lib/libopencv_photo.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_stitching.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_video.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_videoio.so.4.4.0
+complex_plotter: /usr/lib/libcomplex_bessel.so
 complex_plotter: /usr/local/lib/libopencv_imgcodecs.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_calib3d.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_features2d.so.4.4.0

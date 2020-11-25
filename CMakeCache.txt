@@ -209,8 +209,14 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//The directory containing a CMake configuration file for COMPLEX_BESSEL.
+COMPLEX_BESSEL_DIR:PATH=COMPLEX_BESSEL_DIR-NOTFOUND
+
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/usr/local/lib/cmake/opencv4
+
+//The directory containing a CMake configuration file for complex_bessel.
+complex_bessel_DIR:PATH=complex_bessel_DIR-NOTFOUND
 
 //Value Computed by CMake
 complex_plotter_project_BINARY_DIR:STATIC=/home/dhairya/Documents/Complex Plotter

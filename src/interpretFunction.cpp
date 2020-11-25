@@ -68,11 +68,13 @@ void initFunc(std::string infix) {
 			infixVec.push_back(tempStr+")");
 			i = j;
 		}
+		else if (infix[i] == ',') {
+		}
 		else {
 			infixVec.push_back(infix.substr(i, 1));
 		}
 	}
-
+    
 	//Put expression into reverse polish notation using the shunting-yard algorithm with functions
 	for (std::vector<std::string>::iterator it = infixVec.begin(); it != infixVec.end(); it++) {
 		std::string token = *it;
@@ -146,18 +148,29 @@ void initFunc(std::string infix) {
 		std::vector<Token>::iterator it = expr.begin();
 		
 		for (size_t i = 1; i < expr.size(); i++) {
+		    if (expr[i].type == FUNCTION && expr[i].op >= BESSELJ && expr[i - 1].type == IMMEDIATE && expr[i - 2].type == IMMEDIATE){
+		        expr[i-2].num = evalFuncTwoArg(expr[i].op, expr[i-2].num.real(), expr[i-1].num);
+		        
+		        //need to shift expression left by 1, to fill empty slot left by evaluating function with two args
+		        if (i != expr.size() - 1) {
+			        std::rotate(it, it + 2, expr.end());
+			    }
+			    expr.pop_back();
+			    expr.pop_back();
+			    changed = true;
+		    }
 			if(expr[i].type == FUNCTION && expr[i - 1].type == IMMEDIATE){
-				expr[i - 1].num = evalFunc(it->op, expr[i - 1].num);
-				
-				//need to shift expression left by 1, to fill empty slot left by evaluating function
-				if (i != expr.size() - 1){
-				    std::rotate(it + 1, it + 2, expr.end());
-				}
-				expr.pop_back();
+			    expr[i - 1].num = evalFunc(expr[i].op, expr[i - 1].num);
+			    
+			    //need to shift expression left by 1, to fill empty slot left by evaluating function
+			    if (i != expr.size() - 1){
+			        std::rotate(it + 1, it + 2, expr.end());
+			    }
+			    expr.pop_back();
 				changed = true;
 			}
 			else if(expr[i].type == BIN_OPERATOR && expr[i - 1].type == IMMEDIATE && expr[i - 2].type == IMMEDIATE){
-			    switch (it->op) {
+			    switch (expr[i].op) {
 			        case ADD:
 				        expr[i - 2].num = expr[i - 2].num + expr[i - 1].num;
 				        break;
@@ -197,7 +210,7 @@ void initFunc(std::string infix) {
 //gets operation/function/number indices that can be used to isolate token 
 int getOp(std::string& infix, int n) {
 	for (size_t i = n + 1; i < infix.size(); i++) {
-		if (infix[i] == '\\' || infix[i] == '-' || infix[i] == '+' || infix[i] == '*' || infix[i] == '/' || infix[i] == '^' || infix[i] == '{' || infix[i] == '}') {
+		if (infix[i] == '\\' || infix[i] == '-' || infix[i] == '+' || infix[i] == '*' || infix[i] == '/' || infix[i] == '^' || infix[i] == '{' || infix[i] == '}' || infix[i] == ',') {
 			if (i != n + 1) {
 				return i;
 			}
@@ -274,6 +287,12 @@ int getOpCode(std::string& token) {
 		return GAMMA;
 	else if (token == "zeta")
 		return ZETA;
+	else if (token == "digamma")
+	    return DIGAMMA;
+	else if (token == "besselj")
+	    return BESSELJ;
+	else if (token == "bessely")
+	    return BESSELY;
 	else
 		return OTHER;
 }
@@ -333,9 +352,24 @@ std::complex<double> evalFunc(int opCode, std::complex<double> z) {
 		return gamma(z);
 	case ZETA:
 		return zeta(z);
+	case DIGAMMA: {
+	    std::complex<double> tempGamma = gamma(z);
+	    return (gamma(z + step) - tempGamma)/(step * tempGamma);
+	    }
 	default:
 		return 0.0;
 	}
+}
+
+std::complex<double> evalFuncTwoArg(int opCode, std::complex<double> arg1, std::complex<double> arg2) {
+    switch(opCode){
+        case BESSELJ:
+            return sp_bessel::besselJ(arg1.real(), arg2);
+        case BESSELY:
+            return sp_bessel::besselY(arg1.real(), arg2);
+        default:
+            return 0.0;
+    }
 }
 
 //evaluates the overall expression using a stack
@@ -352,8 +386,15 @@ std::complex<double> f(std::complex<double> z) {
 			evalStack[stackCounter++] = z;
 		}
 		else if (it->type == FUNCTION) {
-			temp1 = evalStack[--stackCounter];
-			evalStack[stackCounter++] = evalFunc(it->op, temp1);
+		    if (it->op >= BESSELJ){
+		        temp1 = evalStack[--stackCounter];
+		        temp2 = evalStack[--stackCounter];
+		        evalStack[stackCounter++] = evalFuncTwoArg(it->op, temp2, temp1);
+		    }
+		    else{
+			    temp1 = evalStack[--stackCounter];
+			    evalStack[stackCounter++] = evalFunc(it->op, temp1);
+			}
 		}
 		else if (it->type == BIN_OPERATOR) {
 			temp1 = evalStack[--stackCounter];

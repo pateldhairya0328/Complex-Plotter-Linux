@@ -25,7 +25,7 @@ message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 add_executable(complex_plotter ${SOURCES})
 
 add_library(complex_bessel SHARED IMPORTED)
-set_property(TARGET complex_bessel PROPERTY IMPORTED_LOCATION "/usr/lib/libcomplex_bessel.so")
+set_property(TARGET complex_bessel PROPERTY IMPORTED_LOCATION "/usr/lib")
 
 # Link your application with OpenCV libraries
 target_link_libraries(complex_plotter PRIVATE ${OpenCV_LIBS} complex_bessel)
