@@ -97,25 +97,28 @@ The five operators are +, -, \*, /, and ^, for addition, subtraction, division, 
 
 Functions are input with a backslash, the name of the function, and followed by brackets surrounding the argument of the function. For example, sin(π/4) is `\sin(\pi/4)`. Currently, all of the inbuilt functions available are single input (no min, max or mod function for example). The list of available functions is: 
 * Miscellaneous Complex: `\Re`, `\Im`, `\abs`, `\arg`, `\conj`
-* Trigonometric Functions: `\cos`, `\sin`, `\tan`, `\sec`, `\csc`, `\cot`
-* Inverse Trigonometric Functions: `\acos`, `\asin`, `\atan`, `\asec`, `\acsc`, `\acot`
-* Hyperbolic Trigonometric Functions: `\cosh`, `\sinh`, `\tanh`, `\sech`, `\csch`, `\coth`
-* Inverse Hyperbolic Trigonometric Functions: `\acosh`, `\asinh`, `\atanh`, `\asech`, `\acsch`, `\acoth`
-* Logarithms: `\log` (base 10), `\ln` (natural logarithm)
+* Logarithms: `\log` (natural logarithm/ principal branch of complex logarithm)
 * Exponential: `\exp`
+* Trigonometric Functions: `\cos`, `\sin`, `\tan`, `\sec`, `\csc`, `\cot`
+* Inverse Trigonometric Functions: `\acos`, `\asin`, `\atan`
+* Hyperbolic Trigonometric Functions: `\cosh`, `\sinh`, `\tanh`
+* Inverse Hyperbolic Trigonometric Functions: `\acosh`, `\asinh`, `\atanh`
 * Gamma: `\gamma`
+* Bessel: `\besselj` (first kind), `bessely` (second kind)
 * Step: `\step` (step greater than equal to 0)
 *	Delta: `\delta` (1 around |z|, 0 elsewhere)
 
-Possible functions available in the future may be square root (can currently be implemented by `^\0.5`), the Zeta function, and Bessel functions.
+Possible functions available in the future may be square root (can currently be implemented by `^\0.5`), the Zeta function and the Spherical Bessel functions. The Hankel and Modified Bessel functions can easily be implemented using expressions of the Bessel function.
+
 NOTE: the last two ONLY work on the real component of the argument.
+NOTE: All of the functions EXCEPT the Bessel functions take a single argument, for example `\exp(z^2)`, where the one argument is `z^2`. Bessel functions take two arguments, separated by a comma. The first is a real number indicating the order, and the second is any complex number as an actual argument to the function. For example J<sub>2</sub>(z) would be input as `\besselj(2,z)`.
 
 **Important Note: Make sure there are NO SPACES anywhere in the function expression. The interpreter will assume a space to be the end of the function.**
-**Important Note: If passing in the function as a command line argument, make sure to write \( and \) instead of ( or ).**
+**Important Note: If passing in the function as a command line argument, many characters are special characters and need to be escaped using a `\`. These characters include `(`, `)`, `\`, `*`, `,`.  These characters should instead be input as `\(`, `\)`, `\\`, `\*`, `\,`**
 
 Lastly, a variable quantity can also be passed in, as `z`, which is what will be changed in the program to evaluate the function. It is important that the variable is always input as `z`, and nothing else (such as `x` or `s` or `w`). 
 
-Combining this, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `Complex-Plotter.exe -a -10 -b 10 -c -10 -d 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
+Combining this, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `./complex_plotter -a -10 -b 10 -c -10 -d 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
 
 ### Other Details
 
