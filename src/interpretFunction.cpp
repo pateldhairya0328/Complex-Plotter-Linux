@@ -289,10 +289,18 @@ int getOpCode(std::string& token) {
 		return ZETA;
 	else if (token == "digamma")
 	    return DIGAMMA;
+	else if (token == "airy")
+	    return AIRY;
+	else if (token == "biry")
+	    return BIRY;
 	else if (token == "besselj")
 	    return BESSELJ;
 	else if (token == "bessely")
 	    return BESSELY;
+	else if (token == "sphbesselj")
+	    return SPHBESSELJ;
+	else if (token == "sphbessely")
+	    return SPHBESSELY;
 	else
 		return OTHER;
 }
@@ -356,17 +364,26 @@ std::complex<double> evalFunc(int opCode, std::complex<double> z) {
 	    std::complex<double> tempGamma = gamma(z);
 	    return (gamma(z + step) - tempGamma)/(step * tempGamma);
 	    }
+	case AIRY:
+	    return sp_bessel::airy(z);
+	case BIRY:
+	    return sp_bessel::biry(z);
 	default:
 		return 0.0;
 	}
 }
 
+//evaluates functions with two arguments (the bessel functions, for now)
 std::complex<double> evalFuncTwoArg(int opCode, std::complex<double> arg1, std::complex<double> arg2) {
     switch(opCode){
         case BESSELJ:
             return sp_bessel::besselJ(arg1.real(), arg2);
         case BESSELY:
             return sp_bessel::besselY(arg1.real(), arg2);
+        case SPHBESSELJ:
+            return sp_bessel::sph_besselJ(arg1.real(), arg2);
+        case SPHBESSELY:
+            return sp_bessel::sph_besselY(arg1.real(), arg2);
         default:
             return 0.0;
     }
@@ -389,7 +406,9 @@ std::complex<double> f(std::complex<double> z) {
 		    if (it->op >= BESSELJ){
 		        temp1 = evalStack[--stackCounter];
 		        temp2 = evalStack[--stackCounter];
+		        std::cout.setstate(std::ios_base::failbit); //suppress console output from external function calls
 		        evalStack[stackCounter++] = evalFuncTwoArg(it->op, temp2, temp1);
+		        std::cout.clear(); //unsuppress console output
 		    }
 		    else{
 			    temp1 = evalStack[--stackCounter];

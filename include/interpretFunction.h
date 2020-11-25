@@ -17,7 +17,7 @@ const double p[9] = { 0.99999999999980993, 676.5203681218851, -1259.139216722402
 const int pSize = 9;
 
 enum otherTokens { LBRACKET = -3, RBRACKET = -2, OTHER = -1};
-enum operation { ADD, SUB, MUL, DIV, POW, RE, IM, ABS, ARG, CONJ, EXP, LOG, COS, SIN, TAN, SEC, CSC, COT, ACOS, ASIN, ATAN, COSH, SINH, TANH, ACOSH, ASINH, ATANH, STEP, DELTA, GAMMA, ZETA, DIGAMMA, BESSELJ, BESSELY };
+enum operation { ADD, SUB, MUL, DIV, POW, RE, IM, ABS, ARG, CONJ, EXP, LOG, COS, SIN, TAN, SEC, CSC, COT, ACOS, ASIN, ATAN, COSH, SINH, TANH, ACOSH, ASINH, ATANH, STEP, DELTA, GAMMA, ZETA, DIGAMMA, AIRY, BIRY, BESSELJ, BESSELY, SPHBESSELJ, SPHBESSELY };
 enum tokenType { FUNCTION = -3, BIN_OPERATOR = -2, IMMEDIATE = -1, VARIABLE = 0 };
 
 //struct used for creating postfix expression, since the expression
@@ -28,8 +28,8 @@ enum tokenType { FUNCTION = -3, BIN_OPERATOR = -2, IMMEDIATE = -1, VARIABLE = 0 
 //the function expression
 struct Token {
 	int type = 0;
-	std::complex<double> num;//type = 0: constant, type = 1: variable (z)
-	int op;//type = 2: function, type = 3: operator
+	std::complex<double> num;
+	int op;
 };
 
 void setStep(double argstep);
@@ -41,4 +41,3 @@ std::complex<double> evalFunc(int opCode, std::complex<double> z);
 std::complex<double> evalFuncTwoArg(int opcode, std::complex<double> arg1, std::complex<double> arg2);
 std::complex<double> gamma(std::complex<double> z);
 std::complex<double> zeta(std::complex<double> z);
-//std::complex<double> bessel_J(int alpha, std::complex<double> z);
