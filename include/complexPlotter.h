@@ -1,5 +1,4 @@
 #pragma once
-#include <interpretFunction.h>
 #include "opencv2/opencv.hpp"
 #include <string.h>
 #include <complex>

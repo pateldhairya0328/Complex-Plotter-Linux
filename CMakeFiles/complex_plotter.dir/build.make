@@ -77,18 +77,18 @@ include CMakeFiles/complex_plotter.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/complex_plotter.dir/flags.make
 
-CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o: CMakeFiles/complex_plotter.dir/flags.make
-CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o: src/ComplexPlotter.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/dhairya/Documents/Complex Plotter/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o -c "/home/dhairya/Documents/Complex Plotter/src/ComplexPlotter.cpp"
+CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o: CMakeFiles/complex_plotter.dir/flags.make
+CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o: src/complexPlotter.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/dhairya/Documents/Complex Plotter/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o -c "/home/dhairya/Documents/Complex Plotter/src/complexPlotter.cpp"
 
-CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/dhairya/Documents/Complex Plotter/src/ComplexPlotter.cpp" > CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.i
+CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/dhairya/Documents/Complex Plotter/src/complexPlotter.cpp" > CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.i
 
-CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/dhairya/Documents/Complex Plotter/src/ComplexPlotter.cpp" -o CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.s
+CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/dhairya/Documents/Complex Plotter/src/complexPlotter.cpp" -o CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.s
 
 CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.o: CMakeFiles/complex_plotter.dir/flags.make
 CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.o: src/interpretFunction.cpp
@@ -103,16 +103,31 @@ CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/dhairya/Documents/Complex Plotter/src/interpretFunction.cpp" -o CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.s
 
+CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o: CMakeFiles/complex_plotter.dir/flags.make
+CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o: src/specialFunctions.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/dhairya/Documents/Complex Plotter/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o -c "/home/dhairya/Documents/Complex Plotter/src/specialFunctions.cpp"
+
+CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/dhairya/Documents/Complex Plotter/src/specialFunctions.cpp" > CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.i
+
+CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/dhairya/Documents/Complex Plotter/src/specialFunctions.cpp" -o CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.s
+
 # Object files for target complex_plotter
 complex_plotter_OBJECTS = \
-"CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o" \
-"CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.o"
+"CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o" \
+"CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.o" \
+"CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o"
 
 # External object files for target complex_plotter
 complex_plotter_EXTERNAL_OBJECTS =
 
-complex_plotter: CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o
+complex_plotter: CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o
 complex_plotter: CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.o
+complex_plotter: CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o
 complex_plotter: CMakeFiles/complex_plotter.dir/build.make
 complex_plotter: /usr/local/lib/libopencv_dnn.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_gapi.so.4.4.0
@@ -131,7 +146,7 @@ complex_plotter: /usr/local/lib/libopencv_flann.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_imgproc.so.4.4.0
 complex_plotter: /usr/local/lib/libopencv_core.so.4.4.0
 complex_plotter: CMakeFiles/complex_plotter.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/dhairya/Documents/Complex Plotter/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable complex_plotter"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/dhairya/Documents/Complex Plotter/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable complex_plotter"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/complex_plotter.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

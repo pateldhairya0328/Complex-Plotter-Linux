@@ -25,6 +25,7 @@ message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 # Declare the executable target built from your sources
 add_executable(complex_plotter ${SOURCES})
 
+# Include shared object library that acts as a wrapper for FORTRAN library that computes bessel functions
 add_library(complex_bessel SHARED IMPORTED)
 set_property(TARGET complex_bessel PROPERTY IMPORTED_LOCATION "/usr/lib/libcomplex_bessel.so")
 

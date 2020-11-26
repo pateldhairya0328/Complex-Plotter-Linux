@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o"
+  "CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o"
   "CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.o"
+  "CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o"
   "complex_plotter"
   "complex_plotter.pdb"
 )

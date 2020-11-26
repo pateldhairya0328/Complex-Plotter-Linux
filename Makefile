@@ -143,32 +143,32 @@ complex_plotter/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/build
 .PHONY : complex_plotter/fast
 
-src/ComplexPlotter.o: src/ComplexPlotter.cpp.o
+src/complexPlotter.o: src/complexPlotter.cpp.o
 
-.PHONY : src/ComplexPlotter.o
+.PHONY : src/complexPlotter.o
 
 # target to build an object file
-src/ComplexPlotter.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o
-.PHONY : src/ComplexPlotter.cpp.o
+src/complexPlotter.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o
+.PHONY : src/complexPlotter.cpp.o
 
-src/ComplexPlotter.i: src/ComplexPlotter.cpp.i
+src/complexPlotter.i: src/complexPlotter.cpp.i
 
-.PHONY : src/ComplexPlotter.i
+.PHONY : src/complexPlotter.i
 
 # target to preprocess a source file
-src/ComplexPlotter.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.i
-.PHONY : src/ComplexPlotter.cpp.i
+src/complexPlotter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.i
+.PHONY : src/complexPlotter.cpp.i
 
-src/ComplexPlotter.s: src/ComplexPlotter.cpp.s
+src/complexPlotter.s: src/complexPlotter.cpp.s
 
-.PHONY : src/ComplexPlotter.s
+.PHONY : src/complexPlotter.s
 
 # target to generate assembly for a file
-src/ComplexPlotter.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.s
-.PHONY : src/ComplexPlotter.cpp.s
+src/complexPlotter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.s
+.PHONY : src/complexPlotter.cpp.s
 
 src/interpretFunction.o: src/interpretFunction.cpp.o
 
@@ -197,6 +197,33 @@ src/interpretFunction.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.s
 .PHONY : src/interpretFunction.cpp.s
 
+src/specialFunctions.o: src/specialFunctions.cpp.o
+
+.PHONY : src/specialFunctions.o
+
+# target to build an object file
+src/specialFunctions.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o
+.PHONY : src/specialFunctions.cpp.o
+
+src/specialFunctions.i: src/specialFunctions.cpp.i
+
+.PHONY : src/specialFunctions.i
+
+# target to preprocess a source file
+src/specialFunctions.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.i
+.PHONY : src/specialFunctions.cpp.i
+
+src/specialFunctions.s: src/specialFunctions.cpp.s
+
+.PHONY : src/specialFunctions.s
+
+# target to generate assembly for a file
+src/specialFunctions.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.s
+.PHONY : src/specialFunctions.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -206,12 +233,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... complex_plotter"
-	@echo "... src/ComplexPlotter.o"
-	@echo "... src/ComplexPlotter.i"
-	@echo "... src/ComplexPlotter.s"
+	@echo "... src/complexPlotter.o"
+	@echo "... src/complexPlotter.i"
+	@echo "... src/complexPlotter.s"
 	@echo "... src/interpretFunction.o"
 	@echo "... src/interpretFunction.i"
 	@echo "... src/interpretFunction.s"
+	@echo "... src/specialFunctions.o"
+	@echo "... src/specialFunctions.i"
+	@echo "... src/specialFunctions.s"
 .PHONY : help
 
 

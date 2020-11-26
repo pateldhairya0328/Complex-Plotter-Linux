@@ -4,8 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/dhairya/Documents/Complex Plotter/src/ComplexPlotter.cpp" "/home/dhairya/Documents/Complex Plotter/CMakeFiles/complex_plotter.dir/src/ComplexPlotter.cpp.o"
+  "/home/dhairya/Documents/Complex Plotter/src/complexPlotter.cpp" "/home/dhairya/Documents/Complex Plotter/CMakeFiles/complex_plotter.dir/src/complexPlotter.cpp.o"
   "/home/dhairya/Documents/Complex Plotter/src/interpretFunction.cpp" "/home/dhairya/Documents/Complex Plotter/CMakeFiles/complex_plotter.dir/src/interpretFunction.cpp.o"
+  "/home/dhairya/Documents/Complex Plotter/src/specialFunctions.cpp" "/home/dhairya/Documents/Complex Plotter/CMakeFiles/complex_plotter.dir/src/specialFunctions.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

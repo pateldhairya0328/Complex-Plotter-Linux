@@ -94,12 +94,12 @@ clean: CMakeFiles/complex_plotter.dir/clean
 CMakeFiles/complex_plotter.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/complex_plotter.dir/build.make CMakeFiles/complex_plotter.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/home/dhairya/Documents/Complex Plotter/CMakeFiles" --progress-num=1,2,3 "Built target complex_plotter"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/home/dhairya/Documents/Complex Plotter/CMakeFiles" --progress-num=1,2,3,4 "Built target complex_plotter"
 .PHONY : CMakeFiles/complex_plotter.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/complex_plotter.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/dhairya/Documents/Complex Plotter/CMakeFiles" 3
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/dhairya/Documents/Complex Plotter/CMakeFiles" 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/complex_plotter.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "/home/dhairya/Documents/Complex Plotter/CMakeFiles" 0
 .PHONY : CMakeFiles/complex_plotter.dir/rule
