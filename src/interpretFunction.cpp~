@@ -517,7 +517,9 @@ std::complex<double> f(std::vector<Token> &postfix){
                 evalStack.pop();
                 temp2 = evalStack.top();
                 evalStack.pop();
+                std::cout.setstate(std::ios_base::failbit); //suppress console output from external function calls
                 evalStack.push(evalFuncTwoArg(it->op, temp2, temp1));
+                std::cout.clear(); //unsuppress console output
             }
             else{
                 temp1 = evalStack.top();

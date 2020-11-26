@@ -12,6 +12,12 @@ complexPlotter.h
 interpretFunction.h
 /home/dhairya/Documents/Complex Plotter/src/interpretFunction.h
 
+/home/dhairya/Documents/Complex Plotter/src/interpretFunction.cpp
+interpretFunction.h
+/home/dhairya/Documents/Complex Plotter/src/interpretFunction.h
+specialFunctions.h
+/home/dhairya/Documents/Complex Plotter/src/specialFunctions.h
+
 /usr/local/include/opencv4/opencv2/calib3d.hpp
 opencv2/core.hpp
 /usr/local/include/opencv4/opencv2/opencv2/core.hpp
@@ -1059,4 +1065,10 @@ iostream
 -
 algorithm
 -
+
+include/specialFunctions.h
+complex
+-
+complex_bessel.h
+include/complex_bessel.h
 
