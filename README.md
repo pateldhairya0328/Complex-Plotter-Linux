@@ -1,10 +1,10 @@
 # Complex-Plotter-Linux
 The same complex plotter as my other repo, but for Linux
 
-This is a repository for visualizing complex valued functions using domain coloring in C++ using OpenCV. Also uses the C++ wrapper for the FORTRAN subroutines to evaluate Bessel functions found at https://github.com/joeydumont/complex_bessel. The method of domain coloring 
+This is a repository for visualizing complex valued functions using domain coloring in C++ using OpenCV. Also uses the C++ wrapper for the FORTRAN subroutines (found at https://www.netlib.org/amos/) to evaluate Bessel functions found at https://github.com/joeydumont/complex_bessel. The method of domain coloring 
 used here gives information about four main properties of a complex number - magnitude, phase, as well as real and imaginary components -
-as well as the singularities and zeros. I will present some examples of how to interpret the different pieces of  information from the domain colored
-plot using the rational function:
+as well as the singularities and zeros. I will present some examples of how to interpret the different pieces of information from the domain colored
+plot using the example rational function:
 
 ![equation](https://latex.codecogs.com/gif.latex?\inline&space;f(z)=(z&plus;3&plus;5i)(z-7i)^2&space;\left&space;(&space;\frac{1}{z}&plus;\frac{i}{(z-5-3i)^3}&space;\right&space;))
 
@@ -89,6 +89,7 @@ Passing the function is a bit more complicated, and must be done with a very spe
 * operators
 * brackets
 * inbuilt functions
+* summations
 * the variable
 
 The syntax for numbers is simple: you can just directly write the numbers. For real numbers, -2 is simply `-2`, and 4.2347 is simply `4.2347`. There are three special numbers available: π, e and i. π can be entered as `pi`, e can be entered as `e` and i as `i`. For a complex number, you can simply write it has `a+bi`, where `a` and `b` are simply any real numbers. For example, you can enter the complex number 4.23-1.98i as `4.23-1.98i`. You can also optionally input a complex number a+bi as [a,b].
@@ -104,21 +105,25 @@ Functions are input with a backslash, the name of the function, and followed by 
 * Hyperbolic Trigonometric Functions: `\cosh`, `\sinh`, `\tanh`
 * Inverse Hyperbolic Trigonometric Functions: `\acosh`, `\asinh`, `\atanh`
 * Gamma: `\gamma`
+* Airy: `\airy` (first kind), `biry` (second kind)
 * Bessel: `\besselj` (first kind), `bessely` (second kind)
+* Spherical Bessel: `\sphbesselj` (first kind), `sphbessely` (second kind)
 * Step: `\step` (step greater than equal to 0)
-*	Delta: `\delta` (1 around |z|, 0 elsewhere)
+*	Delta: `\delta` (1 around |z| = 0, 0 elsewhere)
 
 Possible functions available in the future may be square root (can currently be implemented by `^\0.5`), the Zeta function and the Spherical Bessel functions. The Hankel and Modified Bessel functions can easily be implemented using expressions of the Bessel function.
 
-NOTE: the last two ONLY work on the real component of the argument.
+NOTE: Step and Delta only work on the real component of the argument.
 NOTE: All of the functions EXCEPT the Bessel functions take a single argument, for example `\exp(z^2)`, where the one argument is `z^2`. Bessel functions take two arguments, separated by a comma. The first is a real number indicating the order, and the second is any complex number as an actual argument to the function. For example J<sub>2</sub>(z) would be input as `\besselj(2,z)`.
 
-**Important Note: Make sure there are NO SPACES anywhere in the function expression. The interpreter will assume a space to be the end of the function.**
-**Important Note: If passing in the function as a command line argument, many characters are special characters and need to be escaped using a `\`. These characters include `(`, `)`, `\`, `*`, `,`.  These characters should instead be input as `\(`, `\)`, `\\`, `\*`, `\,`**
+Next, a variable quantity can also be passed in, as `z`, which is what will be changed in the program to evaluate the function. It is important that the variable is always input as `z`, and nothing else (such as `x` or `s` or `w`). 
 
-Lastly, a variable quantity can also be passed in, as `z`, which is what will be changed in the program to evaluate the function. It is important that the variable is always input as `z`, and nothing else (such as `x` or `s` or `w`). 
+Lastly, we can also have sums in our function (but sadly, not infinite sums). The syntax for summations is `\sum([index var];[start];[end];[inside sum])`. The index variable is simple the variable the indexes the sum. Make sure to not make this conflict with other program strings, such as `i` or `e`, which would cause the program to behave unpredictably (using `n` or `k` is always a safe choice). [start] and [end] are self explanatory. The last argument is simply what goes inside the sum. Sums can also be nested within each other. As an example, ![Equation](https://latex.codecogs.com/gif.latex?\sum_{n=1}^{10}\left(\sum_{m=1}^{n}\frac{z^{n}}{n!}\right)) can be input as `\sum(n;1;10;\sum(m;1;n;z^n/\gamma(n+1)))`, where we use the fact that the gamma function is a shift of the factorial.
 
 Combining this, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `./complex_plotter -a -10 -b 10 -c -10 -d 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
+
+**Important Note: Make sure there are NO SPACES anywhere in the function expression. The interpreter will assume a space to be the end of the function.**
+**Important Note: If passing in the function as a command line argument, many characters are special characters and need to be escaped using a `\`. These characters include `(`, `)`, `\`, `*`, `,`.  These characters should instead be input as `\(`, `\)`, `\\`, `\*`, `\,`. As such, for long expressions, it is much easier to run the program without any command line arguments, and pass the arguments as prompted, where escaping characters is not necessary.**
 
 ### Other Details
 
