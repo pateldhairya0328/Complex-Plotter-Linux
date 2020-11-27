@@ -90,6 +90,7 @@ Passing the function is a bit more complicated, and must be done with a very spe
 * brackets
 * inbuilt functions
 * summations
+* derivatives
 * the variable
 
 The syntax for numbers is simple: you can just directly write the numbers. For real numbers, -2 is simply `-2`, and 4.2347 is simply `4.2347`. There are three special numbers available: π, e and i. π can be entered as `pi`, e can be entered as `e` and i as `i`. For a complex number, you can simply write it has `a+bi`, where `a` and `b` are simply any real numbers. For example, you can enter the complex number 4.23-1.98i as `4.23-1.98i`. You can also optionally input a complex number a+bi as [a,b].
@@ -118,11 +119,14 @@ NOTE: All of the functions EXCEPT the Bessel functions take a single argument, f
 
 Next, a variable quantity can also be passed in, as `z`, which is what will be changed in the program to evaluate the function. It is important that the variable is always input as `z`, and nothing else (such as `x` or `s` or `w`). 
 
-Lastly, we can also have sums in our function (but sadly, not infinite sums). The syntax for summations is `\sum([index var];[start];[end];[inside sum])`. The index variable is simple the variable the indexes the sum. Make sure to not make this conflict with other program strings, such as `i` or `e`, which would cause the program to behave unpredictably (using `n` or `k` is always a safe choice). [start] and [end] are self explanatory. The last argument is simply what goes inside the sum. Sums can also be nested within each other. As an example, ![Equation](https://latex.codecogs.com/gif.latex?\sum_{n=1}^{10}\left(\sum_{m=1}^{n}\frac{z^{n}}{n!}\right)) can be input as `\sum(n;1;10;\sum(m;1;n;z^n/\gamma(n+1)))`, where we use the fact that the gamma function is a shift of the factorial.
+Then, we can also have sums in our function (but sadly, not infinite sums). The syntax for summations is `\sum([index var];[start];[end];[inside sum])`. The index variable is simple the variable the indexes the sum. Make sure to not make this conflict with other program strings, such as `i` or `e`, which would cause the program to behave unpredictably (using `n` or `k` is always a safe choice). [start] and [end] are self explanatory. The last argument is simply what goes inside the sum. Sums can also be nested within each other. As an example, ![Equation](https://latex.codecogs.com/gif.latex?\sum_{n=1}^{10}\left(\sum_{m=1}^{n}\frac{z^{n}}{n!}\right)) can be input as `\sum(n;1;10;\sum(m;1;n;z^n/\gamma(n+1)))`, where we use the fact that the gamma function is a shift of the factorial.
 
-Combining this, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `./complex_plotter -a -10 -b 10 -c -10 -d 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
+Lastly, we can do derivatives with respect to `z`. For any positive integer n, the nth derivative can be entered as `\diff(n;[infix expr])`, where `[infix expr]` is the expression to find the derivative for. For example, ![Equation](https://latex.codecogs.com/gif.latex?\frac{d^3}{dz^3}(z\sin{z})) can be input as `\diff(3;z*\sin(z))`. Note that the time to compute the derivative increases linearly with the order of the derivative, so for higher order derivatives, this may be very slow. 
+
+Combining the above, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `./complex_plotter -a -10 -b 10 -c -10 -d 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
 
 **Important Note: Make sure there are NO SPACES anywhere in the function expression. The interpreter will assume a space to be the end of the function.**
+
 **Important Note: If passing in the function as a command line argument, many characters are special characters and need to be escaped using a `\`. These characters include `(`, `)`, `\`, `*`, `,`.  These characters should instead be input as `\(`, `\)`, `\\`, `\*`, `\,`. As such, for long expressions, it is much easier to run the program without any command line arguments, and pass the arguments as prompted, where escaping characters is not necessary.**
 
 ### Other Details
