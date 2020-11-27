@@ -105,13 +105,21 @@ std::vector<Token> parseFunc(std::string &infix) {
             }
             else if (token.substr(0, 4) == "diff") {
                 std::string argString = token.substr(5, token.size() - 6);// isolates string of arguments
-                size_t k = 0;
-                // only two arguments; finds the first semicolon that seperates the two
+                size_t k = 0, j = 0;
+                // only three arguments; finds the first semicolon
                 while (argString[k] != ';' && k < argString.size()){
                     k++;
                 }
-                // first argument is the order of the derivative
-                int order = std::stoi(argString.substr(0, k));
+                // first argument is the variable to do derivative wrt
+                std::string varName = argString.substr(0, k);
+                
+                j = k + 1;
+                while (argString[j] != ';' && k < argString.size()){
+                    j++;
+                }
+                // second argument is the order of the derivative
+                int order = std::stoi(argString.substr(k + 1, j - k - 1));
+                
                 // initialize vector of finite difference coefficients of exact size needed to numerically 
                 // compute derivative of certain order
                 std::vector<int> coeffs((order + 1) / 2 * 2 + 1, 0);
@@ -152,8 +160,13 @@ std::vector<Token> parseFunc(std::string &infix) {
                     }
                 }
                 
-                // get the second argument, and parse it into a postfix expression
-                std::string subInfix = argString.substr(k + 1, argString.size() - k - 1);
+                coeffs.push_back(0); //derivative along real axis
+                if (varName == "y"){
+                    coeffs[coeffs.size() - 1] = -1; //derivative along imaginary axis
+                }
+                
+                // get the third and last argument, and parse it into a postfix expression
+                std::string subInfix = argString.substr(j + 1, argString.size() - j - 1);
                 std::vector<Token> subExpr = parseFunc(subInfix);
                 // make the token and add it to the main postfix expression
                 Token t = { DIFF, 0, order, coeffs, subExpr };
@@ -690,12 +703,17 @@ std::complex<double> f(std::vector<Token> &postfix){
         // derivative, by recursively evaluating the function at the required values 
         else if (it->type == DIFF){
             temp1 = 0.0;
-            temp2 = variables[0]; // stores the z value we will be manipulating
-            int n = (it->coeffs.size() - 1)/2;
-            // order size of optimal step is machine constant^(n+2) for nth derivative
-            double h = std::pow(EPS, 1.0/((double)it->op + 2));
+            temp2 = variables[0]; // stores the value we will be manipulating
             
-            for (int i = 0; i < it->coeffs.size(); i++){
+            int n = (it->coeffs.size() - 2)/2;
+            
+            // order size of optimal step is machine constant^(n+2) for nth derivative
+            std::complex<double> h = std::pow(EPS, 1.0/(it->op + 2.0));
+            if (it->coeffs[it->coeffs.size() - 1] == -1){
+                h *= I; //if doing y derivative, delta is in imaginary direction
+            }
+            
+            for (int i = 0; i < it->coeffs.size() - 1; i++){
                 if (it->coeffs[i] != 0){
                     variables[0] = temp2 + (double)(i - n) * h;
                     temp1 += f(it->postfix) * (double)it->coeffs[i];

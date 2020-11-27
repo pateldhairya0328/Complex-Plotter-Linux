@@ -172,6 +172,7 @@ int main(int argc, char *argv[])
     //Initializing the Function Interpreter to set up postfix expression of function
     setStep(std::max(xstep, ystep));
     initFunc(func);
+    return 0;
     std::cout << std::endl;
 
     //Making and saving the plot
