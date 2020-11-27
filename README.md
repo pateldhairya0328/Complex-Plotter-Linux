@@ -121,7 +121,7 @@ Next, a variable quantity can also be passed in, as `z`, which is what will be c
 
 Then, we can also have sums in our function (but sadly, not infinite sums). The syntax for summations is `\sum([index var];[start];[end];[inside sum])`. The index variable is simple the variable the indexes the sum. Make sure to not make this conflict with other program strings, such as `i` or `e`, which would cause the program to behave unpredictably (using `n` or `k` is always a safe choice). [start] and [end] are self explanatory. The last argument is simply what goes inside the sum. Sums can also be nested within each other. As an example, ![Equation](https://latex.codecogs.com/gif.latex?\sum_{n=1}^{10}\left(\sum_{m=1}^{n}\frac{z^{n}}{n!}\right)) can be input as `\sum(n;1;10;\sum(m;1;n;z^n/\gamma(n+1)))`, where we use the fact that the gamma function is a shift of the factorial.
 
-Lastly, we can do derivatives with respect to `z`. For any positive integer n, the nth derivative can be entered as `\diff(n;[infix expr])`, where `[infix expr]` is the expression to find the derivative for. For example, ![Equation](https://latex.codecogs.com/gif.latex?\frac{d^3}{dz^3}(z\sin{z})) can be input as `\diff(3;z*\sin(z))`. Note that the time to compute the derivative increases linearly with the order of the derivative, so for higher order derivatives, this may be very slow. 
+Lastly, we can do derivatives with respect to `z`. For any positive integer n, the nth derivative can be entered as `\diff(n;[infix expr])`, where `[infix expr]` is the expression to find the derivative for. For example, ![Equation](https://latex.codecogs.com/gif.latex?\frac{d^3}{dz^3}(z\sin{z})) can be input as `\diff(3;z*\sin(z))`. Note that the time to compute the derivative increases linearly with the order of the derivative, so for higher order derivatives, this may be very slow. Also, the derivative can be done with respect to the real axis or the imaginary axis. Instead of `z`, input `y` for imaginary axis, and `x` for real axis. Using `z` will by default do the derivative along `x`, and derivative wrt `z` only makes sense if your function is analytic.
 
 Combining the above, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `./complex_plotter -x1 -10 -x2 10 -y1 -10 -y2 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
 
@@ -224,6 +224,18 @@ over [-1.5, 1.5]×[-1.5, 1.5]
 The plot for the 7th degree Butterworth polynomial of a low pass Butterworth filter, with the location of the 7 zeros being seen around the high frequencies (left half of the unit circle)
 
 <a href="https://imgur.com/7VFcTRL"><img src="https://i.imgur.com/7VFcTRL.jpg" title="source: imgur.com" /></a>
+
+* ![Equation](https://latex.codecogs.com/gif.latex?\frac{d^2}{dz^2}\cos{(\pi%20z)}) on the left; ![Equation](https://latex.codecogs.com/gif.latex?-\pi^2\cos{(\pi%20z)}) on the right, both over [-1, 1]×[-1, 1]
+
+We obviously know the two equations are the exact same, but plotting the two allows us to verify that the derivative feature does work. Also, because of the function we chose, which is periodic with period 2, it almost seems as if it is one continuous function, if not for the black line.
+
+<a href="https://imgur.com/HECxjLd"><img src="https://i.imgur.com/HECxjLd.png" title="source: imgur.com" /></a>
+
+* ![Equation](https://latex.codecogs.com/gif.latex?\sum_{n=0}^{5}\frac{z^{n}}{\Gamma(n+1)) on the left; ![Equation](https://latex.codecogs.com/gif.latex?e^x) on the right, both over [-1, 1]×[-1, 1]
+
+We know that the left is the trucated Taylor series for the exponential function on the right, and we can see that they are extremely similar, allowing us to verify that our summation feature works. We can also notice the minor changes in hue near the top and bottom between the approximation and the actual exponential. Furthermore, if we zoom in very closely, we can see that for the approximation, the "vertical lines" are slightly curving. Thus, the approximation fails to be unnoticably close, in phase and magnitude, for z with a significant imaginary component, but is almost exact along the real axis.
+
+<a href="https://imgur.com/QSA5fKx"><img src="https://i.imgur.com/QSA5fKx.png" title="source: imgur.com" /></a>
 
 * ![Equation](https://latex.codecogs.com/gif.latex?\frac{\sin\left(z^{3}-1\right)}{z})
 over [-2, 2]×[-2, 2]
