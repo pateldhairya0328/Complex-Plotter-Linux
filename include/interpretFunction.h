@@ -7,14 +7,15 @@
 #include <iostream>
 #include <algorithm>
 
-#define PI 3.14159265358979323846
-#define E 2.71828182845904523536
+#define PI 3.14159265358979323846 // pi
+#define E 2.71828182845904523536 // Euler's number
+#define EPS 2.2204460493e-16 // machine epsilon for double precision, to help the optimal step for basic central difference numerical derivative
 
 const std::complex<double> I = std::complex<double>(0, 1.0);
 
 enum otherTokens { LBRACKET = -3, RBRACKET = -2, OTHER = -1};
 enum operation { ADD, SUB, MUL, DIV, POW, RE, IM, ABS, ARG, CONJ, EXP, LOG, COS, SIN, TAN, SEC, CSC, COT, ACOS, ASIN, ATAN, COSH, SINH, TANH, ACOSH, ASINH, ATANH, STEP, DELTA, GAMMA, ZETA, DIGAMMA, AIRY, BIRY, BESSELJ, BESSELY, SPHBESSELJ, SPHBESSELY };
-enum tokenType { SUM = -4, FUNCTION = -3, BIN_OPERATOR = -2, IMMEDIATE = -1, VARIABLE = 0 };
+enum tokenType { DIFF = -5, SUM = -4, FUNCTION = -3, BIN_OPERATOR = -2, IMMEDIATE = -1, VARIABLE = 0 };
 
 //struct used for creating postfix expression, since the expression
 //needs to handle operators, functions and numbers. I could just use
@@ -25,8 +26,8 @@ enum tokenType { SUM = -4, FUNCTION = -3, BIN_OPERATOR = -2, IMMEDIATE = -1, VAR
 struct Token {
     int type = 0;
     std::complex<double> num; //if type >= -1
-    int op; //operation if tokenType = FUNCTION or BIN_OPERATOR, variable name if tokenType = SUM
-    int sumBounds[2]; //if tokenType = SUM
+    int op; //operation if tokenType = FUNCTION or BIN_OPERATOR, variable name if tokenType = SUM, order of derivative if tokenType = DIFF
+    std::vector<int> coeffs; //bounds if tokenType = SUM, finite difference derivative coeffs f tokenType = DIFF
     std::vector<Token> postfix; //if tokenType = SUM
 };
 

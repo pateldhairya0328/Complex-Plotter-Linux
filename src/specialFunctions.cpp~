@@ -19,6 +19,10 @@ std::complex<double> gamma(std::complex<double> z) {
     return y;
 }
 
+std::complex<double> gamma(std::complex<double> z) {
+    
+}
+
 //using formula 21 on https://mathworld.wolfram.com/RiemannZetaFunction.html
 std::complex<double> zeta(std::complex<double> z) {
     if (z.real() < 0) {

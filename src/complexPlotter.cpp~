@@ -168,10 +168,11 @@ int main(int argc, char *argv[])
     std::cout << "Domain: [" << realMin << ", " << realMax << "]x[" << imagMin << ", " << imagMax << "]"<< std::endl;
     std::cout << "x-step: " << xstep << "; y-step: " << ystep << "; # Pixels real: "<< realNum << "; # Pixels imag: " << imagNum << std::endl;
     std::cout << "Grid: " << lineType << "; Equal Angle lines: " << (equiAngleLines ? "true" : "false") << "; Axes: " << (axis ? "true" : "false") << std::endl;
-    
+
     //Initializing the Function Interpreter to set up postfix expression of function
     setStep(std::max(xstep, ystep));
     initFunc(func);
+    return 0;
     std::cout << std::endl;
 
     //Making and saving the plot
