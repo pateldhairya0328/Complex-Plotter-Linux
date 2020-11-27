@@ -13,6 +13,9 @@ void setStep(double argstep) {
     step = argstep;
 }
 
+// Initialize the user inputed function
+// Initializes the z variable which is varied through the execution of the program
+// Uses parseFunc to parse the entire input expression
 void initFunc(std::string &infix){
     variables.push_back(0.0);
     variableNames.push_back("z");
@@ -34,7 +37,11 @@ std::vector<Token> parseFunc(std::string &infix) {
         std::string token = *it;
         std::complex<double> value;
         int code = getOpCode(token);
-
+        
+        // The other code is meant to indicate a variable or immediate quantity (such as z, i, pi, e, or 
+        // some user input number). Derivatives and sums are also treated as one, because during execution
+        // once the sum or derivative is evaluated, it will simply be replaced by a number in the 
+        // evaluation stack. 
         if (code == OTHER) {
             if (token.substr(0, 3) == "sum"){
                 std::vector<std::string> args[4];
@@ -50,19 +57,20 @@ std::vector<Token> parseFunc(std::string &infix) {
                 for (size_t i = 0; i < argString.size() && k < 3; i++){
                     if (argString[i] == ';'){
                         switch(k){
-                            case 0: 
+                            case 0: // first argument is name of index variable
                                 sumIndexVar = argString.substr(0, i);
                                 prev = i + 1;
                                 k = 1;
                                 break;
-                            case 1:
+                            case 1: // second argument is lower bound of sum
                                 lowerBound = std::stoi(argString.substr(prev, i - prev));
                                 prev = i + 1;
                                 k = 2;
                                 break;
-                            case 2:
+                            case 2: // third argument is upper bound of sum
                                 upperBound = std::stoi(argString.substr(prev, i - prev));
                                 prev = i + 1;
+                                // fourth argument is the expression inside the sum
                                 subInfix = argString.substr(prev, argString.size() - prev);
                                 k = 4;
                                 break;
@@ -72,27 +80,46 @@ std::vector<Token> parseFunc(std::string &infix) {
                     }
                 }
                 
-                //make the token
-                variableNames.push_back(sumIndexVar);
-                variables.push_back(0.0);
-                int size = (int)(variables.size() - 1);
+                // initializes the variable in the vector of variables, if it does not already exist
+                bool varExists = false;
+                int varIndex = -1;
+                for (int j = 0; j < variables.size(); j++){
+                    if (variableNames[j] == sumIndexVar){
+                        varExists = true;
+                        varIndex = j; // set variable to the one that already exists
+                        break;
+                    }
+                }
+                if (!varExists){
+                    variableNames.push_back(sumIndexVar);
+                    variables.push_back(0.0);
+                    varIndex = (int)(variables.size() - 1); // varIndex is the last one (newest entry)
+                }
+                
+                // parse expression inside the sum, which will be evaluated when the program is running
                 std::vector<Token> subExpr = parseFunc(subInfix);
-                Token t = { SUM, 0, size, {lowerBound, upperBound}, subExpr };
+                
+                // make the token and push it into the postfix expression
+                Token t = { SUM, 0, varIndex, {lowerBound, upperBound}, subExpr };
                 postfix.push_back(t);
             }
             else if (token.substr(0, 4) == "diff") {
                 std::string argString = token.substr(5, token.size() - 6);// isolates string of arguments
                 size_t k = 0;
+                // only two arguments; finds the first semicolon that seperates the two
                 while (argString[k] != ';' && k < argString.size()){
                     k++;
                 }
+                // first argument is the order of the derivative
                 int order = std::stoi(argString.substr(0, k));
+                // initialize vector of finite difference coefficients of exact size needed to numerically 
+                // compute derivative of certain order
                 std::vector<int> coeffs((order + 1) / 2 * 2 + 1, 0);
                 
-                // the stored coefficients are double the actual coefficients
-                // this is so the coefficients are all integers, as some of them
-                // are odd numbers/2
-                // can find coeffs for even numbers using Pascal's triangle 
+                // the stored coefficients are double the actual coefficients this is so the coefficients 
+                // are all integers, as some of them have decimal part 0.5. Thus, my storing the double of
+                // the coefffs, we can store them using integers instead of doubles or floats
+                // can find coeffs for even orders using Pascal's triangle 
                 if (order % 2 == 0) {
                     coeffs[0] = 2;
                     coeffs[order] = 2;
@@ -102,28 +129,33 @@ std::vector<Token> parseFunc(std::string &infix) {
                         coeffs[order - i] = coeffs[i];
                     }
                 }
-                // for odd numbers, need to find even coeffs for previous order 
-                // then sum coeffs from previous order to go to next order
-                // as is done for central finite differences
+                // for odd numbers, need to find even coeffs for previous order (which is always even) then sum 
+                // coeffs from previous order to go to next order as is done to find the next order central finite
+                // difference typically. instead of storing the even order coeffs, we simply only keep the 
+                // previously computed one, as that is the only one needed, and we do the sums to create the next
+                // row (the one we need) along the way.
                 else {
-                    std::vector<int> tcoeffs(coeffs.size() - 2, 0);
-                    tcoeffs[0] = 1;
-                    tcoeffs[tcoeffs.size() - 1] = 1;
-                    for (int i = 1; i <= tcoeffs.size()/2 + 1; i++) {
-                        tcoeffs[i] = - (tcoeffs.size() - i) * tcoeffs[i - 1];
-                        tcoeffs[i] /= i;
-                        tcoeffs[tcoeffs.size() - 1 - i] = tcoeffs[i];
-                    }
-                    for (int i = 0; i < tcoeffs.size(); i++){
-                        coeffs[i] -= tcoeffs[i];
-                        coeffs[i + 2] += tcoeffs[i];
+                    int prevEvenCoeff = 1;
+                    for (int i = 0; i < coeffs.size()/2; i++) {
+                        coeffs[i] -= prevEvenCoeff;
+                        coeffs[i + 2] += prevEvenCoeff;
+                        // in the last iteration, coeffs[i] = coeffs[size - i - 3], and coeffs[i + 2] = 
+                        // coeffs[size - i - 3], and we would double up the last coefficient in the last
+                        // iteration, so to prevent that, we do not run these two lines if it is the last loop
+                        if (i != coeffs.size()/2 - 1){
+                            coeffs[coeffs.size() - i - 1] += prevEvenCoeff;
+                            coeffs[coeffs.size() - i - 3] -= prevEvenCoeff;
+                        }
+                        std::cout << std::endl;
+                        prevEvenCoeff = - (coeffs.size() - i - 3) * prevEvenCoeff;
+                        prevEvenCoeff /= i + 1;
                     }
                 }
-                for (auto c: coeffs){
-                    std::cout << c << ", ";
-                }
+                
+                // get the second argument, and parse it into a postfix expression
                 std::string subInfix = argString.substr(k + 1, argString.size() - k - 1);
                 std::vector<Token> subExpr = parseFunc(subInfix);
+                // make the token and add it to the main postfix expression
                 Token t = { DIFF, 0, order, coeffs, subExpr };
                 postfix.push_back(t);
             }
@@ -160,9 +192,12 @@ std::vector<Token> parseFunc(std::string &infix) {
                 }
             }
         }
+        // it is a function, which we also can treat like an immediate, as it will evaluate to one value and result in
+        // pushing a single constant onto the stack at the end, so we instantly push it onto the stack like an immediate
         else if (code >= 5) {
             opStack.push(code);
         }
+        // it is a binary operator, so we deal with it based on operator precendence
         else if (code >= 0 && code <= 4) {
             while (!opStack.empty() &&
                 ((opStack.top() >= code)
@@ -173,9 +208,11 @@ std::vector<Token> parseFunc(std::string &infix) {
             }
             opStack.push(code);
         }
+        // push left bracket
         else if (code == LBRACKET) {
             opStack.push(code);
         }
+        // if we see a right bracket, keep popping until we meet a left bracket, or the stack is emptied
         else if (code == RBRACKET) {
             while (!opStack.empty() && opStack.top() != LBRACKET) {
                 postfix.push_back({ opStack.top() <= 4 ? BIN_OPERATOR : FUNCTION, 0.0, opStack.top(), {}, emptyVec });
@@ -186,6 +223,9 @@ std::vector<Token> parseFunc(std::string &infix) {
             }
         }
     }
+    // pop out all the values still left on the stack, to complete the postfix expression. It can only either be a binary
+    // operator, or a function, which are the only two things not instantly pushed onto the postfix expression, but rather
+    // onto the stack first
     while (!opStack.empty()) {
         postfix.push_back({ opStack.top() <= 4 ? BIN_OPERATOR : FUNCTION, 0.0, opStack.top(), {}, emptyVec });
         opStack.pop();
@@ -200,10 +240,11 @@ std::vector<Token> parseFunc(std::string &infix) {
     while(changed){
         changed = false;
         
-        //iterator that lags behind by 1, needed for the rotations
+        //iterator that lags behind by 1, needed for the rotations when expressions are simplified
         std::vector<Token>::iterator it = postfix.begin();
         
         for (size_t i = 1; i < postfix.size(); i++) {
+            // we find a bessel function and two immediates, so it can be simplified to one immediate = bessel(imm1, imm2)
             if (postfix[i].type == FUNCTION && postfix[i].op >= BESSELJ && postfix[i - 1].type == IMMEDIATE && postfix[i - 2].type == IMMEDIATE){
                 postfix[i-2].num = evalFuncTwoArg(postfix[i].op, postfix[i-2].num.real(), postfix[i-1].num);
                 
@@ -215,6 +256,7 @@ std::vector<Token> parseFunc(std::string &infix) {
                 postfix.pop_back();
                 changed = true;
             }
+            // we find a function of one variable and one immediate, so it can be simplified to one immediate = func(imm1)
             if(postfix[i].type == FUNCTION && postfix[i - 1].type == IMMEDIATE){
                 postfix[i - 1].num = evalFunc(postfix[i].op, postfix[i - 1].num);
                 
@@ -225,6 +267,7 @@ std::vector<Token> parseFunc(std::string &infix) {
                 postfix.pop_back();
                 changed = true;
             }
+            // we find a binary operator and two immediates, so it can be simplified to one immediate = imm1 (operator) imm2
             else if(postfix[i].type == BIN_OPERATOR && postfix[i - 1].type == IMMEDIATE && postfix[i - 2].type == IMMEDIATE){
                 switch (postfix[i].op) {
                     case ADD:
@@ -266,12 +309,16 @@ std::vector<Token> parseFunc(std::string &infix) {
 std::vector<std::string> getInfixVec(std::string &infix){
     std::vector<std::string> infixVec;
     
+    // ( and ) are used in strings that represent complex numbers - a + ib is written as (a, b) when its a string for C++
+    // to correctly parse it into a complex number. Thus, normal ( and ) would conflict, and thus we replace them with 
+    // { and } which cause no issues  
     std::replace(infix.begin(), infix.end(), '(', '{');
     std::replace(infix.begin(), infix.end(), ')', '}');
     
     //Isolate each operator, function, number and variable as an individual token string
     for (size_t i = 0; i < infix.size(); i++) {
         if (infix[i] == '\\') {
+            // if it is a sum, we simply take the entire string related to the sum and let the parser deal with it later
             if (infix.substr(i + 1, 3) == "sum"){
                 int j = 0;
                 size_t k = i;
@@ -290,6 +337,7 @@ std::vector<std::string> getInfixVec(std::string &infix){
                     }
                 }
             }
+            // if it is a diff, we simply take the entire string related to the derivative and let the parser deal with it later
             else if (infix.substr(i + 1, 4) == "diff"){
                 int j = 0;
                 size_t k = i;
@@ -308,6 +356,7 @@ std::vector<std::string> getInfixVec(std::string &infix){
                     }
                 }
             }
+            // it is some other function, for which the end of the function is found using getOp
             else{
                 int j = getOp(infix, i);
                 std::string tempStr = infix.substr(i + 1, j - i - 1);
@@ -315,18 +364,23 @@ std::vector<std::string> getInfixVec(std::string &infix){
                 i = j - 1;
             }
         }
+        // we find a negative sign right after a bracket, so we push a 0 in front for unambiguity
         else if (i > 0 && infix[i] == '-' && infix[i - 1] == '{') {
             infixVec.push_back("0");
             infixVec.push_back("-");
         }
+        // we find a negative sign at start of expression, so we push a 0 in front for unambiguity
         else if (i == 0 && infix[i] == '-') {
             infixVec.push_back("0");
             infixVec.push_back("-");
         }
+        // we find pi, so we push pi
         else if (infix.substr(i, 2) == "pi") {
             infixVec.push_back("pi");
             i++;
         }
+        // we find a number, so we look for the end of the number, which is when we would find the first
+        // non-digit or non-period character
         else if (std::isdigit(infix[i]) || infix[i] == '.') {
             int j = i;
             std::string tempStr = "";
@@ -334,6 +388,7 @@ std::vector<std::string> getInfixVec(std::string &infix){
                 tempStr += infix[j];
                 j++;
             }
+            // if there is an i at the end, then it's an imaginary number
             if (j < infix.size() && infix[j] == 'i') {
                 infixVec.push_back("(0,"+tempStr+")");
                 j++;
@@ -343,6 +398,7 @@ std::vector<std::string> getInfixVec(std::string &infix){
             }
             i = j - 1;
         }
+        // find the other way to input complex numbers, [a,b]
         else if (infix[i] == '['){
             int j = i + 1;
             std::string tempStr = "(";
@@ -353,8 +409,7 @@ std::vector<std::string> getInfixVec(std::string &infix){
             infixVec.push_back(tempStr+")");
             i = j;
         }
-        else if (infix[i] == ',') {
-        }
+        // other cases - either we have a variable, or we have a single character quantity (i, e, +, -, *, /, '(', ')', ',')
         else {
             bool tokenAdded = false;
             //check if token is a variable, and add it
@@ -367,6 +422,7 @@ std::vector<std::string> getInfixVec(std::string &infix){
                 }
             }
             
+            // we skip commas, which seperate arguments in bessel functions, and we do nothing if a token was already added as a variable
             if (infix[i] != ',' && !tokenAdded){
                 infixVec.push_back(infix.substr(i, 1));
             }
@@ -529,10 +585,8 @@ std::complex<double> evalFunc(int opCode, std::complex<double> z) {
         return gamma(z);
     case ZETA:
         return zeta(z);
-    case DIGAMMA: {
-        std::complex<double> tempGamma = gamma(z);
-        return (gamma(z + step) - tempGamma)/(step * tempGamma);
-        }
+    case DIGAMMA: 
+        return digamma(z);
     case AIRY:
         return airy(z);
     case BIRY:
@@ -571,12 +625,15 @@ std::complex<double> f(std::vector<Token> &postfix){
     std::complex<double> temp1, temp2;
     
     for (std::vector<Token>::iterator it = postfix.begin(); it != postfix.end(); it++) {
+        // if we encounter immediate, push it onto stack
         if (it->type == IMMEDIATE) {
             evalStack.push(it->num);
         }
+        // if we encounter variable, find its value and push value onto stack
         else if (it->type >= VARIABLE) {
             evalStack.push(variables[it->type]);
         }
+        // if we encounter function, pop required number of numbers, eval function, and push result
         else if (it->type == FUNCTION) {
             if (it->op >= BESSELJ){
                 temp1 = evalStack.top();
@@ -591,6 +648,7 @@ std::complex<double> f(std::vector<Token> &postfix){
                 evalStack.push(evalFunc(it->op, temp1));
             }
         }
+        // if we encounter binary operator, pop two numbers, apply binary operator, and push result
         else if (it->type == BIN_OPERATOR) {
             temp1 = evalStack.top();
             evalStack.pop();
@@ -618,6 +676,8 @@ std::complex<double> f(std::vector<Token> &postfix){
                     break;
             }
         }
+        // if we encounter a sum, set the sum index variable, and use a for loop and recursive function calls
+        // to evaluate the sum
         else if (it->type == SUM){
             temp1 = 0.0;
             for (int i = it->coeffs[0]; i <= it->coeffs[1]; i++){
@@ -626,21 +686,25 @@ std::complex<double> f(std::vector<Token> &postfix){
             }
             evalStack.push(temp1);
         }
+        // if we encounter a derivative, use the precalculated finite difference coefficients to evaluate the
+        // derivative, by recursively evaluating the function at the required values 
         else if (it->type == DIFF){
             temp1 = 0.0;
-            temp2 = variables[0];
+            temp2 = variables[0]; // stores the z value we will be manipulating
             int n = (it->coeffs.size() - 1)/2;
             // order size of optimal step is machine constant^(n+2) for nth derivative
             double h = std::pow(EPS, 1.0/((double)it->op + 2));
             
             for (int i = 0; i < it->coeffs.size(); i++){
-                variables[0] = temp2 + (double)(i - n) * h;
-                temp1 += f(it->postfix) * (double)it->coeffs[i];
+                if (it->coeffs[i] != 0){
+                    variables[0] = temp2 + (double)(i - n) * h;
+                    temp1 += f(it->postfix) * (double)it->coeffs[i];
+                }
             }
             
             temp1 /= 2.0*std::pow(h, (double)it->op);
-            variables[0] = temp2;
-            evalStack.push(temp1);
+            variables[0] = temp2; // restores the z value to original
+            evalStack.push(temp1); // pushes result of derivative
         }
     }
     

@@ -19,6 +19,13 @@ std::complex<double> gamma(std::complex<double> z) {
     return y;
 }
 
+std::complex<double> digamma(std::complex<double> z){
+    std::complex<double> temp1, temp2;
+    temp1 = gamma(z + EPS);
+    temp2 = gamma(z - EPS);
+    return (temp1 - temp2)/(EPS * (temp1 + temp2));
+}
+
 //using formula 21 on https://mathworld.wolfram.com/RiemannZetaFunction.html
 std::complex<double> zeta(std::complex<double> z) {
     if (z.real() < 0) {

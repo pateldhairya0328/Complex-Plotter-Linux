@@ -2,6 +2,7 @@
 #include <complex>
 #include "complex_bessel.h"
 #define PI 3.14159265358979323846
+#define EPS 2.2204460493e-16
 
 //size of array needed for lanczos approx
 const int pSize = 9;
