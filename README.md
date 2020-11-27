@@ -62,10 +62,10 @@ Note: Try not to enable this grid and the grid of constant real and imaginary va
 
 ### Program Parameters
 The step size, the domain of the plotted function, and equal angle lines, the grid and the function can all be controlled through command line arguments, with the format `-[identifier of argument] argument`. The following list outlines all of the available commands:
-* `-realMin [decimal number]` (alias: `-a`)
-* `-realMax [decimal number]` (alias: `-b`)
-* `-imagMin [decimal number]` (alias: `-c`)
-* `-imagMax [decimal number]` (alias: `-d`) 
+* `-realMin [decimal number]` (alias: `-x1`)
+* `-realMax [decimal number]` (alias: `-x2`)
+* `-imagMin [decimal number]` (alias: `-y1`)
+* `-imagMax [decimal number]` (alias: `-y2`) 
 * `-step [decimal number]` (alias: `-s`)
 * `-xstep [decimal number]` (alias: `-xs`)
 * `-ystep [decimal number]` (alias: `-ys`)
@@ -123,7 +123,7 @@ Then, we can also have sums in our function (but sadly, not infinite sums). The 
 
 Lastly, we can do derivatives with respect to `z`. For any positive integer n, the nth derivative can be entered as `\diff(n;[infix expr])`, where `[infix expr]` is the expression to find the derivative for. For example, ![Equation](https://latex.codecogs.com/gif.latex?\frac{d^3}{dz^3}(z\sin{z})) can be input as `\diff(3;z*\sin(z))`. Note that the time to compute the derivative increases linearly with the order of the derivative, so for higher order derivatives, this may be very slow. 
 
-Combining the above, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `./complex_plotter -a -10 -b 10 -c -10 -d 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
+Combining the above, we can input the function graphed above as `((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. In order to obtain the plot above, the full command line argument would be `./complex_plotter -x1 -10 -x2 10 -y1 -10 -y2 10 -s 0.002604166666667 -g b -l t -f ((z+3+5i)*(z-7i)^2)*(1/z+i/(z-5-3i)^3)`. 
 
 **Important Note: Make sure there are NO SPACES anywhere in the function expression. The interpreter will assume a space to be the end of the function.**
 
