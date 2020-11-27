@@ -9,7 +9,7 @@
 
 #define PI 3.14159265358979323846 // pi
 #define E 2.71828182845904523536 // Euler's number
-#define CBRT_EPS 2.2204460493e-16 // machine epsilon for double precision, to help the optimal step for basic central difference numerical derivative
+#define EPS 2.2204460493e-16 // machine epsilon for double precision, to help the optimal step for basic central difference numerical derivative
 
 const std::complex<double> I = std::complex<double>(0, 1.0);
 
@@ -35,6 +35,7 @@ void setStep(double argstep);
 void initFunc(std::string &infix);
 std::vector<Token> parseFunc(std::string &infix);
 std::vector<std::string> getInfixVec(std::string &infix);
+std::vector<int> getFiniteDiffCoeffs(int order);
 int getOpCode(std::string &token);
 int getOp(std::string &infix, int n); 
 std::complex<double> f(std::complex<double> z);

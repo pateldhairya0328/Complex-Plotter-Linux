@@ -32,10 +32,11 @@ struct Token {
 };
 
 void setStep(double argstep);
-void initFunc(std::string &infix);
-std::vector<Token> parseFunc(std::string &infix);
-std::vector<std::string> getInfixVec(std::string &infix);
-int getOpCode(std::string &token);
+void initFunc(std::string infix);
+std::vector<Token> parseFunc(std::string infix);
+std::vector<std::string> getInfixVec(std::string infix);
+std::vector<int> getFiniteDiffCoeffs(int order);
+int getOpCode(std::string token);
 int getOp(std::string &infix, int n); 
 std::complex<double> f(std::complex<double> z);
 std::complex<double> f(std::vector<Token> &postfix);

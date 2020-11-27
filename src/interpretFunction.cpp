@@ -16,7 +16,7 @@ void setStep(double argstep) {
 // Initialize the user inputed function
 // Initializes the z variable which is varied through the execution of the program
 // Uses parseFunc to parse the entire input expression
-void initFunc(std::string &infix){
+void initFunc(std::string infix){
     variables.push_back(0.0);
     variableNames.push_back("z");
     expr = parseFunc(infix);
@@ -24,7 +24,7 @@ void initFunc(std::string &infix){
 
 // Parse function by taking an infix string, and returning a vector of tokens that reprsents the
 // postfix/ reverse polish notation equivalent expression of the infix
-std::vector<Token> parseFunc(std::string &infix) {
+std::vector<Token> parseFunc(std::string infix) {
     //convert infix string to a vector of strings of meaningful string tokens
     std::vector<std::string> infixVec = getInfixVec(infix);
     
@@ -120,46 +120,7 @@ std::vector<Token> parseFunc(std::string &infix) {
                 // second argument is the order of the derivative
                 int order = std::stoi(argString.substr(k + 1, j - k - 1));
                 
-                // initialize vector of finite difference coefficients of exact size needed to numerically 
-                // compute derivative of certain order
-                std::vector<int> coeffs((order + 1) / 2 * 2 + 1, 0);
-                
-                // the stored coefficients are double the actual coefficients this is so the coefficients 
-                // are all integers, as some of them have decimal part 0.5. Thus, my storing the double of
-                // the coefffs, we can store them using integers instead of doubles or floats
-                // can find coeffs for even orders using Pascal's triangle 
-                if (order % 2 == 0) {
-                    coeffs[0] = 2;
-                    coeffs[order] = 2;
-                    for (int i = 1; i <= order/2; i++) {
-                        coeffs[i] = - (order - i + 1) * coeffs[i - 1];
-                        coeffs[i] /= i;
-                        coeffs[order - i] = coeffs[i];
-                    }
-                }
-                // for odd numbers, need to find even coeffs for previous order (which is always even) then sum 
-                // coeffs from previous order to go to next order as is done to find the next order central finite
-                // difference typically. instead of storing the even order coeffs, we simply only keep the 
-                // previously computed one, as that is the only one needed, and we do the sums to create the next
-                // row (the one we need) along the way.
-                else {
-                    int prevEvenCoeff = 1;
-                    for (int i = 0; i < coeffs.size()/2; i++) {
-                        coeffs[i] -= prevEvenCoeff;
-                        coeffs[i + 2] += prevEvenCoeff;
-                        // in the last iteration, coeffs[i] = coeffs[size - i - 3], and coeffs[i + 2] = 
-                        // coeffs[size - i - 3], and we would double up the last coefficient in the last
-                        // iteration, so to prevent that, we do not run these two lines if it is the last loop
-                        if (i != coeffs.size()/2 - 1){
-                            coeffs[coeffs.size() - i - 1] += prevEvenCoeff;
-                            coeffs[coeffs.size() - i - 3] -= prevEvenCoeff;
-                        }
-                        std::cout << std::endl;
-                        prevEvenCoeff = - (coeffs.size() - i - 3) * prevEvenCoeff;
-                        prevEvenCoeff /= i + 1;
-                    }
-                }
-                
+                std::vector<int> coeffs = getFiniteDiffCoeffs(order);                
                 coeffs.push_back(0); //derivative along real axis
                 if (varName == "y"){
                     coeffs[coeffs.size() - 1] = -1; //derivative along imaginary axis
@@ -319,7 +280,7 @@ std::vector<Token> parseFunc(std::string &infix) {
 }
 
 // converts infix string to a vector of strings, to make it easier to parse in later steps
-std::vector<std::string> getInfixVec(std::string &infix){
+std::vector<std::string> getInfixVec(std::string infix){
     std::vector<std::string> infixVec;
     
     // ( and ) are used in strings that represent complex numbers - a + ib is written as (a, b) when its a string for C++
@@ -445,6 +406,51 @@ std::vector<std::string> getInfixVec(std::string &infix){
     return infixVec;
 }
 
+// for the nth derivative (order = n), get central finite difference coeffs (times 2)
+std::vector<int> getFiniteDiffCoeffs(int order){
+    // initialize vector of finite difference coefficients of exact size needed to numerically 
+    // compute derivative of certain order
+    std::vector<int> coeffs((order + 1) / 2 * 2 + 1, 0);
+    
+    // the stored coefficients are double the actual coefficients this is so the coefficients 
+    // are all integers, as some of them have decimal part 0.5. Thus, my storing the double of
+    // the coefffs, we can store them using integers instead of doubles or floats
+    // can find coeffs for even orders using Pascal's triangle 
+    if (order % 2 == 0) {
+        coeffs[0] = 2;
+        coeffs[order] = 2;
+        for (int i = 1; i <= order/2; i++) {
+            coeffs[i] = - (order - i + 1) * coeffs[i - 1];
+            coeffs[i] /= i;
+            coeffs[order - i] = coeffs[i];
+        }
+    }
+    // for odd numbers, need to find even coeffs for previous order (which is always even) then sum 
+    // coeffs from previous order to go to next order as is done to find the next order central finite
+    // difference typically. instead of storing the even order coeffs, we simply only keep the 
+    // previously computed one, as that is the only one needed, and we do the sums to create the next
+    // row (the one we need) along the way.
+    else {
+        int prevEvenCoeff = 1;
+        for (int i = 0; i < coeffs.size()/2; i++) {
+            coeffs[i] -= prevEvenCoeff;
+            coeffs[i + 2] += prevEvenCoeff;
+            // in the last iteration, coeffs[i] = coeffs[size - i - 3], and coeffs[i + 2] = 
+            // coeffs[size - i - 3], and we would double up the last coefficient in the last
+            // iteration, so to prevent that, we do not run these two lines if it is the last loop
+            if (i != coeffs.size()/2 - 1){
+                coeffs[coeffs.size() - i - 1] += prevEvenCoeff;
+                coeffs[coeffs.size() - i - 3] -= prevEvenCoeff;
+            }
+            std::cout << std::endl;
+            prevEvenCoeff = - (coeffs.size() - i - 3) * prevEvenCoeff;
+            prevEvenCoeff /= i + 1;
+        }
+    }
+    
+    return coeffs;
+}
+
 //gets operation/function/number indices that can be used to isolate token 
 int getOp(std::string& infix, int n) {
     for (size_t i = n + 1; i < infix.size(); i++) {
@@ -458,7 +464,7 @@ int getOp(std::string& infix, int n) {
 }
 
 //Gets operation code
-int getOpCode(std::string& token) {
+int getOpCode(std::string token) {
     if (token == "{")
         return LBRACKET;
     else if (token == "}")
@@ -720,6 +726,8 @@ std::complex<double> f(std::vector<Token> &postfix){
                 }
             }
             
+            // divide the total difference by step size to the appropriate power
+            // divide by 2, as the coeffs we used were actually double the actual coefficients needed 
             temp1 /= 2.0*std::pow(h, (double)it->op);
             variables[0] = temp2; // restores the z value to original
             evalStack.push(temp1); // pushes result of derivative
